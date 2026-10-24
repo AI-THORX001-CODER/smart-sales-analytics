@@ -1,0 +1,238 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalesIQ | Smart Sales Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">S</div>
+                <div>
+                    <h2>SalesIQ</h2>
+                    <p>Business Intelligence</p>
+                </div>
+            </div>
+
+            <p class="nav-heading">WORKSPACE</p>
+            <nav class="navigation">
+                <a class="nav-link active" href="#dashboard">▦ Dashboard</a>
+                <a class="nav-link" href="#daily-sales">▥ Daily Sales</a>
+                <a class="nav-link" href="#sales-records">▤ Sales Records</a>
+                <a class="nav-link" href="#categories">◈ Categories</a>
+                <a class="nav-link" href="#top-products">◇ Top Products</a>
+                <a class="nav-link" href="#forecast">⌁ Sales Forecast</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <span class="status-dot"></span>
+                <span>Analytics System</span>
+                <small>Local Dashboard</small>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">BUSINESS OVERVIEW</p>
+                    <h1>Sales Dashboard</h1>
+                    <p class="subtitle">Monitor your business performance.</p>
+                </div>
+                <button type="button" class="export-button" id="exportCSV">
+                    ↓ Export CSV
+                </button>
+            </header>
+
+            <div id="status" class="status-message">
+                Connecting to backend...
+            </div>
+
+            <section class="kpi-grid" id="dashboard">
+                <article class="kpi-card">
+                    <p>Total Revenue</p>
+                    <h2 id="revenue">₹0</h2>
+                    <span>Sales value</span>
+                </article>
+                <article class="kpi-card">
+                    <p>Units Sold</p>
+                    <h2 id="units">0</h2>
+                    <span>Total quantity</span>
+                </article>
+                <article class="kpi-card">
+                    <p>Sales Records</p>
+                    <h2 id="records">0</h2>
+                    <span>Database entries</span>
+                </article>
+            </section>
+
+            <section class="panel" id="daily-sales">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Daily Sales Trend</h2>
+                        <p>Revenue over time</p>
+                    </div>
+                    <span class="tag">DAILY</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
+            </section>
+
+            <section class="panel" id="sales-records">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Sales Records</h2>
+                        <p>Search, sort and explore individual sales</p>
+                    </div>
+                    <span class="tag">DATABASE</span>
+                </div>
+            
+<div class="date-filter-panel">
+    <div class="date-filter-heading">
+        <h3>Filter Sales by Date</h3>
+        <p>Select a date range to analyze sales.</p>
+    </div>
+
+    <div class="date-filter-controls">
+        <div class="date-field">
+            <label for="startDate">Start Date</label>
+            <input type="date" id="startDate">
+        </div>
+
+        <div class="date-field">
+            <label for="endDate">End Date</label>
+            <input type="date" id="endDate">
+        </div>
+
+        <button type="button" id="applyDateFilter">
+            Apply Filter
+        </button>
+
+        <button type="button" id="clearDateFilter">
+            Clear Dates
+        </button>
+    </div>
+
+    <div class="date-summary">
+        <div class="date-summary-card">
+            <span>Filtered Revenue</span>
+            <strong id="filteredRevenue">₹0</strong>
+        </div>
+
+        <div class="date-summary-card">
+            <span>Filtered Units</span>
+            <strong id="filteredUnits">0</strong>
+        </div>
+
+        <div class="date-summary-card">
+            <span>Matching Records</span>
+            <strong id="filteredRecords">0</strong>
+        </div>
+    </div>
+
+    <p id="dateFilterMessage" class="date-filter-message">
+        Select dates and click Apply Filter.
+    </p>
+</div>
+
+                <div class="sales-toolbar">
+                    <input
+                        type="search"
+                        id="salesSearch"
+                        placeholder="Search product or category..."
+                        aria-label="Search sales records"
+                    >
+
+                    <select id="salesSort" aria-label="Sort sales records">
+                        <option value="default">Sort: Default</option>
+                        <option value="product">Product: A–Z</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="quantity-high">Quantity: High to Low</option>
+                        <option value="revenue-high">Revenue: High to Low</option>
+                        <option value="date-new">Date: Newest First</option>
+                    </select>
+
+                    <button type="button" id="resetSalesSearch">Reset</button>
+                    <span id="sales-count">Loading records...</span>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Revenue</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sales-table-body">
+                            <tr>
+                                <td colspan="6">Loading sales records...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="two-column-grid">
+                <section class="panel" id="categories">
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Category Sales</h2>
+                            <p>Revenue by category</p>
+                        </div>
+                    </div>
+                    <div id="category-list" class="data-list">
+                        Loading categories...
+                    </div>
+                </section>
+
+                <section class="panel" id="top-products">
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Top Products</h2>
+                            <p>Best-performing products</p>
+                        </div>
+                    </div>
+                    <div id="product-list" class="data-list">
+                        Loading products...
+                    </div>
+                </section>
+            </div>
+
+            <section class="panel" id="forecast">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Sales Forecast</h2>
+                        <p>Demonstration prediction based on sample data</p>
+                    </div>
+                    <span class="tag">FORECAST</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+                <p class="note">
+                    Note: Forecast is a demonstration and not a guarantee of future sales.
+                </p>
+            </section>
+
+            <footer class="footer">
+                Smart Sales Analytics &amp; Prediction · Learning Project
+            </footer>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
